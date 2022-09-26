@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-from operator import ixor
-
-
 def no_c(my_string):
-    return my_string.translate({ord(c): None for c in "cC"})
+    chars = 'cC'
+    for c in chars:
+        my_string = my_string.replace(c, '')
+    
+    return my_string
