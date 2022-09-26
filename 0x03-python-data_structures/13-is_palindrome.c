@@ -1,72 +1,55 @@
 #include "lists.h"
 
 /**
- * reverse_listint - Reverses a singly-linked listint_t list.
- * @head: A pointer to the starting node of the list to reverse.
- *
- * Return: A pointer to the head of the reversed list.
- */
-
-listint_t *reverse_listint(listint_t **head)
-{
-	listint_t *node = *head, *next, *prev = NULL;
-
-	while (node)
-	{
-		next = node->next;
-		node->next = prev;
-		prev = node;
-		node = next;
-	}
-
-	*head = prev;
-	return (*head);
-}
-
-
-/**
- * is_palindrome - a function that checks if a
- * singly linked list is a palindrome
- * @head: the pointer to the head of the linked list
- *
- * Return: 1 if it's a palindrome and 0 if not
+ * is_palindrome - function to determine if singly linked list is a palindrome
+ * @head: input pointer to head of singly linked list
+ * Return: 1 if palindrome, 0 if not
  */
 
 int is_palindrome(listint_t **head)
 {
-    listint_t *tmp, *rev, *mid;
-	size_t size = 0, i;
+	listint_t *tmp;
+	int count = 0;
 
-	if (*head == NULL || (*head)->next == NULL)
-		return (1);
-
-	tmp = *head;
-	while (tmp)
-	{
-		size++;
-		tmp = tmp->next;
-	}
-
-	tmp = *head;
-	for (i = 0; i < (size / 2) - 1; i++)
-		tmp = tmp->next;
-
-	if ((size % 2) == 0 && tmp->n != tmp->next->n)
+	if (head == NULL)
 		return (0);
-
-	tmp = tmp->next->next;
-	rev = reverse_listint(&tmp);
-	mid = rev;
-
-	tmp = *head;
-	while (rev)
+	if (*head == NULL)
+		return (1);
+	tmp = (*head);
+	while (tmp->next != NULL && tmp->next->next != NULL)
 	{
-		if (tmp->n != rev->n)
-			return (0);
-		tmp = tmp->next;
-		rev = rev->next;
+		count += 2;
+		tmp = tmp->next->next;
 	}
-	reverse_listint(&mid);
+	if (tmp->next != NULL)
+		count++;
+	tmp = (*head);
+	return (palindrome_check(tmp, count));
+}
 
-	return (1);
+/**
+ * palindrome_check - recursive function to check if listint list is palidrome
+ * @tmp_head: pointer to the current head of the list
+ * @count: integer count of how many nodes from head to check the end
+ * Return: 1 if palindrome, 0 if not
+ */
+
+int palindrome_check(listint_t *tmp_head, int count)
+{
+	listint_t *tmp_end = tmp_head;
+	int count2 = 0;
+
+	/* move tmp_end to the end of where checking based on input count */
+	for (count2 = 0; count2 < count; count2++)
+		tmp_end = tmp_end->next;
+	/* count has successfully reached the middle (or past) of the list */
+	if (count <= 0)
+		return (1);
+	/* a mismatch is found, no palindrome */
+	if (tmp_head->n != tmp_end->n)
+		return (0);
+	/* otherwise, not at end and matching, move forward and call again */
+	tmp_head = tmp_head->next;
+	count -= 2;
+	return (palindrome_check(tmp_head, count));
 }
