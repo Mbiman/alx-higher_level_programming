@@ -1,7 +1,15 @@
 #!/usr/bin/python3
-class LockedClass:
+"""
+Defines class with no class or object attribute
+Control dynamically created instance attributes
+https://www.python-course.eu/python3_slots.php
+"""
+
+
+class LockedClass():
+    """
+    prevent user from creating new instance attribute dynamically
+    unless attribute is "first_name"
+    """
 
     __slots__ = "first_name"
-
-    def __init__(self, first_name=None):
-        self. first_name = first_name
